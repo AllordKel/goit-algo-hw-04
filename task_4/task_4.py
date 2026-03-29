@@ -90,10 +90,11 @@ def main():
         elif command == "add":
             update_answer = update_contact(args)
             if update_answer == "comand_missmatch":
-                user_input = input("Such contact already exists, do you want to update? ")
+                user_input = input("Such contact already exists, do you want to update? (yes/no) ")
                 if user_input.lower() == "yes":
                     print(update_contact(args, True))
                 else:
+                    print("Welcome to the assistant bot!")
                     continue
             else:
                 print(update_answer)
@@ -101,10 +102,11 @@ def main():
         elif command == "change":
             update_answer = update_contact(args, True)
             if update_answer == "comand_missmatch":
-                user_input = input("Such contact does not exist, do you want to create? ")
+                user_input = input("Such contact does not exist, do you want to create? (yes/no) ")
                 if user_input.lower() == "yes":
                     print(update_contact(args))
                 else:
+                    print("Welcome to the assistant bot!")
                     continue
             else:
                 print(update_answer)
