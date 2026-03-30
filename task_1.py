@@ -27,7 +27,7 @@ def total_salary(path: str) -> tuple:
             print(f"Invalid line, skipping: {line}")
             continue
         else:
-            total += int(employee_info[1].strip())  # adding employee salary to total salaries
+            total += float(employee_info[1].strip())  # adding employee salary to total salaries
             good_entries += 1
 
     if good_entries == 0:  # Avoid division by zero if no valid rows
@@ -37,4 +37,6 @@ def total_salary(path: str) -> tuple:
     average = total / good_entries
     if average % 1 == 0:
         average = int(average)
+    if total % 1 == 0:
+        total = int(total)
     return (total, average)
