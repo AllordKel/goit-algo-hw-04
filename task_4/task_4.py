@@ -17,7 +17,7 @@ def load_file(path="contacts.txt"):
     """
     p = Path(path)
     if not p.exists():
-        return {} # File may not exist on first run; return an empty phonebook
+        return {}  # File may not exist on first run; return an empty phonebook
 
     contacts = {}
     with open(p, "r", encoding="utf-8") as fh:
@@ -25,7 +25,7 @@ def load_file(path="contacts.txt"):
 
     for line in lines:
         if not line or ":" not in line:
-            continue # Skip empty or malformed lines
+            continue  # Skip empty or malformed lines
         name, phone = line.split(":")
         contacts[name.strip()] = phone.strip()
     return contacts
@@ -38,18 +38,32 @@ def save_file(contacts, path="contacts.txt"):
             phone_directory.write(f"{name}:{phone}\n")
 
 
-def update_contact(args, update=False):
-    """Create or update a contact."""
+def add_contact(args):
+    """Adds a new contact."""
     if len(args) != 2:
         return "Invalid input"
 
     contacts = load_file()
     name, phone = args
-    if (name.lower() in contacts and not update) or (name.lower() not in contacts and update):
+    if name.lower() in contacts:
         return "comand_missmatch"
     contacts[name.lower()] = normalize_phone(phone)
     save_file(contacts)
-    return "Contact updated." if update else "Contact added."
+    return "Contact added."
+
+
+def change_contact(args):
+    """Changes existed contact."""
+    if len(args) != 2:
+        return "Invalid input"
+
+    contacts = load_file()
+    name, phone = args
+    if name.lower() not in contacts:
+        return "comand_missmatch"
+    contacts[name.lower()] = normalize_phone(phone)
+    save_file(contacts)
+    return "Contact updated."
 
 
 def show_all():
@@ -59,7 +73,7 @@ def show_all():
         return "Phonebook is empty, save some contacts first"
 
     output = []
-    for name, phone in contacts.items(): # Returning all contacts
+    for name, phone in contacts.items():  # Returning all contacts
         output.append(f"{name}: {phone}")
     return "\n".join(output)
 
@@ -69,7 +83,7 @@ def show_phone(args):
     if len(args) != 1:
         return "Invalid input"
     contacts = load_file()
-    if args[0] not in contacts:
+    if args[0].lower() not in contacts:
         return "Contact not found."
     return contacts[args[0]]
 
@@ -88,25 +102,25 @@ def main():
             print("Hello, how can I help you?")
 
         elif command == "add":
-            update_answer = update_contact(args)
+            update_answer = add_contact(args)
             if update_answer == "comand_missmatch":
-                user_input = input("Such contact already exists, do you want to update? (yes/no) ")
-                if user_input.lower() == "yes":
-                    print(update_contact(args, True))
+                user_doublecheck_input = input("Such contact already exists, do you want to update? (yes/no) ")
+                if user_doublecheck_input.lower() == "yes":
+                    print(change_contact(args))
                 else:
-                    print("Welcome to the assistant bot!")
+                    print("Canceling command")
                     continue
             else:
-                print(update_answer)
+                print(add_contact(args))
 
         elif command == "change":
-            update_answer = update_contact(args, True)
+            update_answer = change_contact(args)
             if update_answer == "comand_missmatch":
-                user_input = input("Such contact does not exist, do you want to create? (yes/no) ")
-                if user_input.lower() == "yes":
-                    print(update_contact(args))
+                user_doublecheck_input = input("Such contact does not exist, do you want to create? (yes/no) ")
+                if user_doublecheck_input.lower() == "yes":
+                    print(add_contact(args))
                 else:
-                    print("Welcome to the assistant bot!")
+                    print("Canceling command")
                     continue
             else:
                 print(update_answer)
