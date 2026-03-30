@@ -85,7 +85,7 @@ def show_phone(args):
     contacts = load_file()
     if args[0].lower() not in contacts:
         return "Contact not found."
-    return contacts[args[0]]
+    return contacts[args[0].lower()]
 
 
 def main():
@@ -111,7 +111,7 @@ def main():
                     print("Canceling command")
                     continue
             else:
-                print(add_contact(args))
+                print(update_answer)
 
         elif command == "change":
             update_answer = change_contact(args)
